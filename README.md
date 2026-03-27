@@ -1,8 +1,8 @@
-﻿<!-- description: Gorstak Windows helper repo: BrowserNetworkGuard - read the README before enabling anything aggressive. -->
+<!-- description: Admin PowerShell: HttpListener proxy on localhost + foreground-window hook to grow a domain whitelist; blocks non-listed hosts (see HTTPS limits in README). -->
 
 # 🛡️ BrowserNetworkGuard
 
-> PowerShell **local proxy** that blocks all network connections except user-entered URLs and their dependencies — protecting against telemetry and unauthorized phone-homes.
+> Runs **elevated**: starts an **`HttpListener`** HTTP proxy on **`localhost`** (default **8888**), maintains **`whitelist.json`**, and **monitors the active window title** (Chrome, Edge, Firefox, etc.) to guess which site you typed so its domain can be whitelisted. Domains not on the list (or the built-in “permanent” list) get **403** with a small HTML page.
 
 ---
 
@@ -53,7 +53,9 @@
 
 ## 🔧 Configuration
 
-Configure your browser to use `127.0.0.1:8888` (or your port) as the HTTP/HTTPS proxy.
+Point the browser’s **HTTP proxy** at `127.0.0.1` and your **`-ProxyPort`**. The script also adds a **Windows Firewall** rule for the proxy port (see `Configure-FirewallForProxy` in the script).
+
+**Limitation:** The forwarder is built around **`HttpListener`** and **`WebRequest`**—it is aimed at **HTTP** traffic through the proxy. **HTTPS** often uses **CONNECT** tunneling; real-world HTTPS support may be incomplete depending on browser and site. Treat this as an experimental guard, not a production MITM appliance.
 
 ---
 
